@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Database Service Layer
+  database:
+    image: mysql:8.0
+    container_name: acme_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: my_database
+      MYSQL_ROOT_PASSWORD: root_secure_password
+    ports:
+      - "3306:3306"
+    volumes:
+      # Automatically executes the prebuilt database init script on startup
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Backend API Service Layer
+  backend:
+    build: ./backend
+    container_name: acme_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: database
+      DB_USER: root
+      DB_PASSWORD: root_secure_password
+      DB_NAME: my_database
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  # Frontend Web UI Service Layer
+  web:
+    build: ./web
+    container_name: acme_web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

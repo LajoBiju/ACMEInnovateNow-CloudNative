@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-db
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-db
+  template:
+    metadata:
+      labels:
+        app: acme-db
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: my_database
+            - name: MYSQL_ROOT_PASSWORD
+              value: root_secure_password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: default
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: acme-db
+    

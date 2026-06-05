@@ -9,9 +9,8 @@ function App() {
   const [editingId, setEditingId] = useState(null);
   const [updatedTask, setUpdatedTask] = useState('');
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/todos';
-
-  const fetchTodos = async () => {
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:60347/api/tasks';
+const fetchTodos = async () => {
     const res = await axios.get(API_URL);
     setTodos(res.data);
   };

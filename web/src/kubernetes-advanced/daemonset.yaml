@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: acme-log-collector
+spec:
+  selector:
+    matchLabels:
+      name: log-collector
+  template:
+    metadata:
+      labels:
+        name: log-collector
+    spec:
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v3.0.1

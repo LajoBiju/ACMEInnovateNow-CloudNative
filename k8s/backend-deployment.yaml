@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-backend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-backend
+  template:
+    metadata:
+      labels:
+        app: acme-backend
+    spec:
+      containers:
+        - name: backend
+          image: multi-tier-app-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: database
+            - name: DB_USER
+              value: root
+            - name: DB_PASSWORD
+              value: root_secure_password
+            - name: DB_NAME
+              value: my_database
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: default
+spec:
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    app: acme-backend

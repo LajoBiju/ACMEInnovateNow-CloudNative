@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: acme-db-statefulset
+spec:
+  serviceName: "mysql-stable"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acme-db-ss
+  template:
+    metadata:
+      labels:
+        app: acme-db-ss
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "secretpassword"
+        - name: MYSQL_DATABASE
+          value: "todo_db"
+        ports:
+        - containerPort: 3306
+          name: mysql

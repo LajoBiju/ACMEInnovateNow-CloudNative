@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: acme-web-replicaset
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: acme-web-rs
+  template:
+    metadata:
+      labels:
+        app: acme-web-rs
+    spec:
+      containers:
+      - name: web-rs-container
+        image: multi-tier-app-web:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
